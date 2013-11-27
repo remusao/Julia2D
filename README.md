@@ -13,9 +13,9 @@ make
 
 # Keyboard shortcuts
 
-* `W`, `S` => Zoom in and out
+* `Z`, `X` => Zoom in and out
 * `A`, `D` => Left and Right
-* `Z`, `X` => Up and Down
+* `W`, `S` => Up and Down
 * `+`, `-` => Improve fractal details
 
 # Example
