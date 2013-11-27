@@ -122,6 +122,12 @@ void GLProgram::addUniform(const char* name, unsigned i)
     glUniform1i(location, i);
 }
 
+void GLProgram::addUniform(const char* name, float f)
+{
+    GLuint location = glGetUniformLocation(program_, name);
+    glUniform1f(location, f);
+}
+
 void GLProgram::addAttribute(
     const char* name,
     int size,

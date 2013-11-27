@@ -34,8 +34,9 @@ class Julia
         sf::Window  window_;
 
         // Camera
-        Camera camera_;
-        glm::mat4 modelMatrix_; // Store the projection matrix
+        float dx_;
+        float dy_;
+        float zoom_;
 
         // Buffers
         GLuint vao_;

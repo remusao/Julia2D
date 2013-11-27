@@ -18,7 +18,9 @@ namespace
 
 Julia::Julia(const char* name, int width, int height, float x, float y)
     : window_(sf::VideoMode(width, height), name, sf::Style::Default, sf::ContextSettings(32)),
-      modelMatrix_(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f))),
+      dx_(0.0),
+      dy_(0.0),
+      zoom_(1.0),
       mu_(x, y),
       iter_(10)
 {
@@ -36,10 +38,6 @@ Julia::Julia(const char* name, int width, int height, float x, float y)
     program_.init();
     init_buffers();
     init_shaders();
-
-    // Init camera
-    camera_.setPosition(glm::vec3(0, 0, 5));
-    camera_.setViewportAspectRatio(window_.getSize().x / window_.getSize().y);
 }
 
 
@@ -89,10 +87,13 @@ void Julia::loop()
         // Update elapsed time
         elapsed = time;
 
-        // Update model view projection matrix
-        program_.addUniform("mvp", camera_.matrix() * modelMatrix_);
+        // Fractal
         program_.addUniform("mu", mu_);
         program_.addUniform("iter", iter_);
+        // Camera
+        program_.addUniform("dx", dx_);
+        program_.addUniform("dy", dy_);
+        program_.addUniform("zoom", zoom_);
 
         // Draw
         glClearColor( 0.2f, 0.2f, 0.3f, 0.0f );
@@ -108,38 +109,26 @@ void Julia::loop()
 
 void Julia::processInput(float elapsed)
 {
-    const float moveSpeed = 0.01;
-    const float rotationSpeed = 0.1;
+    const float zoomspeed = 0.005;
+    const float movespeed = 0.01;
 
     // Z-axis
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        camera_.offsetPosition(elapsed * moveSpeed * -camera_.forward());
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        camera_.offsetPosition(elapsed * moveSpeed * camera_.forward());
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+        zoom_ += elapsed * zoomspeed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+        zoom_ -= elapsed * zoomspeed;
 
     // Y-axis
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        camera_.offsetPosition(elapsed * moveSpeed * -camera_.right());
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        camera_.offsetPosition(elapsed * moveSpeed * camera_.right());
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        dy_ += elapsed * movespeed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        dy_ -= elapsed * movespeed;
 
     // X-axis
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-        camera_.offsetPosition(elapsed * moveSpeed * -glm::vec3(0, 1, 0));
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
-        camera_.offsetPosition(elapsed * moveSpeed * glm::vec3(0, 1, 0));
-
-    // Rotation arround X-axis
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        camera_.offsetOrientation(-rotationSpeed, 0);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        camera_.offsetOrientation(rotationSpeed, 0);
-
-    // Rotation arround Y-axis
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        camera_.offsetOrientation(0, -rotationSpeed);
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        camera_.offsetOrientation(0, rotationSpeed);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        dx_ -= elapsed * movespeed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        dx_ += elapsed * movespeed;
 
     // Fractal stuff
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add))

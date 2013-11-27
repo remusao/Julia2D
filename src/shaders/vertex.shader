@@ -1,13 +1,14 @@
 #version 150 core
 
-uniform mat4 mvp;
+uniform float dx;
+uniform float dy;
 
 in vec2 position;
-out vec4 pixPos;
+out vec2 pixPos;
 
 
 void main()
 {
     gl_Position = vec4(position, 1.0, 1.0);
-    pixPos = mvp * gl_Position;
+    pixPos = vec2(gl_Position.x + dx, gl_Position.y + dy);
 }

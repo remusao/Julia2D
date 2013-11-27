@@ -39,6 +39,7 @@ class GLProgram
         void addUniform(const char* name, glm::vec3 mat);
         void addUniform(const char* name, glm::vec4 mat);
         void addUniform(const char* name, unsigned i);
+        void addUniform(const char* name, float f);
         void addAttribute(const char* name, int, GLenum, bool, int, const GLvoid*);
         void finalize();
 

@@ -1,17 +1,18 @@
 #version 150 core
 
 out vec4 color;
-in vec4 pixPos;
+in vec2 pixPos;
 
 uniform int iter;
 uniform vec2 mu;
+uniform float zoom;
 
 void main()
 {
     vec2 z;
 
-    z.x = (pixPos.x - 0.5) / pixPos.z;
-    z.y = (pixPos.y - 0.5) / pixPos.z;
+    z.x = (pixPos.x - 0.5) * zoom;
+    z.y = (pixPos.y - 0.5) * zoom;
 
     int i;
     for (i = 0; i < iter; ++i)
