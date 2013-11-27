@@ -9,7 +9,6 @@
 # include <glm/glm.hpp>
 # include <glm/gtc/matrix_transform.hpp>
 
-# include "camera.hh"
 # include "shader.hh"
 
 class Julia
